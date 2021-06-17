@@ -34,10 +34,18 @@ class MoleculeParser:
             tail = formular[atom.end() :]
 
         elif ldelim:
-            raise NotImplementedError
+            self._stack.append(defaultdict(int))
+            tail = formular[ldelim.end() :]
 
         elif rdelim:
-            raise NotImplementedError
+            index = int(rdelim.group("index") or 1)
+
+            for name, value in self._stack.pop().items():
+                molecule = self._stack.pop()
+                molecule[name] += value * index
+                self._stack.append(molecule)
+
+            tail = formular[rdelim.end() :]
 
         if tail:
             return self.parse(tail)
