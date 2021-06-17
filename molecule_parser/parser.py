@@ -16,6 +16,9 @@ def parse_molecule(formula: str) -> Dict[str, int]:
 
 class MoleculeParser(Parser):
     """
+    molecule    : molecule atom_group
+                | atom_group
+
     atom_group  : DELIM atom RDELIM
                 | LDELIM atom RDELIM NUMBER
                 | atom
@@ -29,6 +32,14 @@ class MoleculeParser(Parser):
 
     def __init__(self):
         self.atoms = defaultdict(int)
+
+    @_("molecule atom_group")
+    def molecule(self, parser):
+        return parser.molecule, parser.atom_group
+
+    @_("atom_group")
+    def molecule(self, parser):
+        return parser.atom_group
 
     @_("LDELIM atom RDELIM")
     def atom_group(self, parser):
