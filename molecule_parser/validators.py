@@ -32,11 +32,9 @@ class DelimiterValidator(IValidator):
 
             try:
                 ldelim = stack.pop()
-            except LookupError:
-                raise ValidationError("delimiter mismatch")
-
-            if not self._is_delim_pair(ldelim, char):
-                raise ValidationError("delimiter mismatch")
+                assert self._is_delim_pair(ldelim, char)
+            except (LookupError, AssertionError) as err:
+                raise ValidationError("delimiter mismatch") from err
 
         if stack:
             raise ValidationError("delimiter mismatch")
