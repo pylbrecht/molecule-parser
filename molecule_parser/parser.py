@@ -17,6 +17,9 @@ class MoleculeParser:
         self._stack = [defaultdict(int)]
 
     def parse(self, formular: str) -> Dict[str, int]:
+        if not formular:
+            return {}
+
         tail = None
 
         atom = self.ATOM_PATTERN.match(formular)
