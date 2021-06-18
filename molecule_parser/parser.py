@@ -27,8 +27,8 @@ class MoleculeParser(IParser):
         self._stack = [defaultdict(int)]
 
     def validate(self, formula: str):
-        for validator in self.validators:
-            validator(formula)
+        for validate in self.validators:
+            validate(formula)
 
     def parse(self, formular: str) -> Dict[str, int]:
         if not formular:
