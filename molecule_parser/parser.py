@@ -64,6 +64,9 @@ class MoleculeParser:
 
             tail = formular[rdelim.end() :]
 
+        else:
+            raise SyntaxError(f"bad character {repr(formular[0])}")
+
         if tail:
             return self.parse(tail)
 

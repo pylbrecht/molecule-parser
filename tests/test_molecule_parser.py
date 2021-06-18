@@ -31,12 +31,16 @@ def test_parse_molecule(formula, result):
 @pytest.mark.parametrize(
     "invalid_input,error_msg",
     [
+        ("-", "bad character '-'"),
         ("(NO", "delimiter mismatch"),
         ("NO)", "delimiter mismatch"),
+        ("123456", "bad character '1'"),
     ],
     ids=[
+        "bad character",
         "mismatched closed parenthesis",
         "mismatched open parenthesis",
+        "only numbers",
     ],
 )
 def test_raise_exception_for_invalid_syntax(invalid_input, error_msg):
