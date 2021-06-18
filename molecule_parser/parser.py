@@ -2,9 +2,17 @@ import re
 from collections import defaultdict
 from typing import Dict
 
+from .validators import DelimiterValidator, ValidationError
+
 
 def parse_molecule(formula: str) -> Dict[str, int]:
     parser = MoleculeParser()
+
+    try:
+        parser.validate(formula)
+    except ValidationError as err:
+        raise SyntaxError(f"{err}") from err
+
     return parser.parse(formula)
 
 
@@ -13,8 +21,14 @@ class MoleculeParser:
     LDELIM_PATTERN = re.compile(r"\(|\[|\{")
     RDELIM_PATTERN = re.compile(r"(\)|\]|\})(?P<index>\d+)?")
 
+    validators = [DelimiterValidator()]
+
     def __init__(self):
         self._stack = [defaultdict(int)]
+
+    def validate(self, formula: str):
+        for validator in self.validators:
+            validator(formula)
 
     def parse(self, formular: str) -> Dict[str, int]:
         if not formular:

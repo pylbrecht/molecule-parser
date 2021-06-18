@@ -26,3 +26,19 @@ def test_version():
 )
 def test_parse_molecule(formula, result):
     assert parse_molecule(formula) == result
+
+
+@pytest.mark.parametrize(
+    "invalid_input,error_msg",
+    [
+        ("(NO", "delimiter mismatch"),
+        ("NO)", "delimiter mismatch"),
+    ],
+    ids=[
+        "mismatched closed parenthesis",
+        "mismatched open parenthesis",
+    ],
+)
+def test_raise_exception_for_invalid_syntax(invalid_input, error_msg):
+    with pytest.raises(SyntaxError, match=error_msg):
+        parse_molecule(invalid_input)
