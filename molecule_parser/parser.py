@@ -12,7 +12,7 @@ class IMoleculeParser(ABC):
         pass
 
     @abstractmethod
-    def parse(self, input_: str):
+    def parse(self, input_: str) -> Dict[str, int]:
         pass
 
 
