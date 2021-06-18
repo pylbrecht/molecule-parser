@@ -7,6 +7,12 @@ __version__ = "0.1.0"
 
 
 def create_molecule_parser() -> MoleculeParser:
+    """
+    Return a `MoleculeParser` instance.
+
+    We use a factory here mainly to avoid stale state of validators
+    (`MoleculeParser`'s validators are instantiated on import).
+    """
     return MoleculeParser()
 
 
