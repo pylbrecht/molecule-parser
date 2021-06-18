@@ -1,6 +1,6 @@
 from typing import Callable, Dict
 
-from .parser import IParser, MoleculeParser
+from .parser import IMoleculeParser, MoleculeParser
 from .validators import ValidationError
 
 __version__ = "0.1.0"
@@ -17,7 +17,8 @@ def create_molecule_parser() -> MoleculeParser:
 
 
 def parse_molecule(
-    formula: str, parser_factory: Callable[..., IParser] = create_molecule_parser
+    formula: str,
+    parser_factory: Callable[..., IMoleculeParser] = create_molecule_parser,
 ) -> Dict[str, int]:
     """
     Parse a chemical `formula` and return a `dict` mapping each atom to its

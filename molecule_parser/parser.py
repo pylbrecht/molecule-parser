@@ -6,7 +6,7 @@ from typing import Dict
 from .validators import DelimiterValidator
 
 
-class IParser(ABC):
+class IMoleculeParser(ABC):
     @abstractmethod
     def validate(self, input_: str):
         pass
@@ -16,7 +16,7 @@ class IParser(ABC):
         pass
 
 
-class MoleculeParser(IParser):
+class MoleculeParser(IMoleculeParser):
     ATOM_PATTERN = re.compile(r"(?P<name>[A-Z][a-z]?)(?P<index>\d+)?")
     LDELIM_PATTERN = re.compile(r"\(|\[|\{")
     RDELIM_PATTERN = re.compile(r"(\)|\]|\})(?P<index>\d+)?")
