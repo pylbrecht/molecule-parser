@@ -17,6 +17,15 @@ class IMoleculeParser(ABC):
 
 
 class MoleculeParser(IMoleculeParser):
+    """
+    Parser for chemical formulas.
+
+    The parser implements a recursive, stack based algorithm parsing the
+    formula from left to right.
+
+    Make sure to validate input before parsing by calling `validate(input)`.
+    """
+
     ATOM_PATTERN = re.compile(r"(?P<name>[A-Z][a-z]?)(?P<index>\d+)?")
     LDELIM_PATTERN = re.compile(r"\(|\[|\{")
     RDELIM_PATTERN = re.compile(r"(\)|\]|\})(?P<index>\d+)?")
@@ -27,10 +36,24 @@ class MoleculeParser(IMoleculeParser):
         self._stack = [defaultdict(int)]
 
     def validate(self, formula: str):
+        """
+        Validate `formula` with all available validators.
+
+        :param formula: a chemical formula
+        :raises ValidationError: if `formula` is not valid
+        """
         for validate in self.validators:
             validate(formula)
 
     def parse(self, formular: str) -> Dict[str, int]:
+        """
+        Parse `formula` and return a `dict` mapping atoms to their count of
+        occurrences.
+
+        :param formula: chemical formula
+        :returns: a `dict` mapping atoms to their occurrence count
+        :raises SyntaxError: for bad characters in `formula`
+        """
         if not formular:
             return {}
 
@@ -51,12 +74,14 @@ class MoleculeParser(IMoleculeParser):
             tail = formular[atom.end() :]
 
         elif ldelim:
+            # enter new context
             self._stack.append(defaultdict(int))
             tail = formular[ldelim.end() :]
 
         elif rdelim:
             index = int(rdelim.group("index") or 1)
 
+            # merge outer and inner context
             for name, value in self._stack.pop().items():
                 molecule = self._stack.pop()
                 molecule[name] += value * index
