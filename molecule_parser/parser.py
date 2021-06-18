@@ -3,18 +3,7 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 from typing import Dict
 
-from .validators import DelimiterValidator, ValidationError
-
-
-def parse_molecule(formula: str) -> Dict[str, int]:
-    parser = MoleculeParser()
-
-    try:
-        parser.validate(formula)
-    except ValidationError as err:
-        raise SyntaxError(f"{err}") from err
-
-    return parser.parse(formula)
+from .validators import DelimiterValidator
 
 
 class IParser(ABC):
