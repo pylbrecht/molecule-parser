@@ -1,4 +1,5 @@
 import re
+from abc import ABC, abstractmethod
 from collections import defaultdict
 from typing import Dict
 
@@ -16,7 +17,17 @@ def parse_molecule(formula: str) -> Dict[str, int]:
     return parser.parse(formula)
 
 
-class MoleculeParser:
+class IParser(ABC):
+    @abstractmethod
+    def validate(self, input_: str):
+        pass
+
+    @abstractmethod
+    def parse(self, input_: str):
+        pass
+
+
+class MoleculeParser(IParser):
     ATOM_PATTERN = re.compile(r"(?P<name>[A-Z][a-z]?)(?P<index>\d+)?")
     LDELIM_PATTERN = re.compile(r"\(|\[|\{")
     RDELIM_PATTERN = re.compile(r"(\)|\]|\})(?P<index>\d+)?")
