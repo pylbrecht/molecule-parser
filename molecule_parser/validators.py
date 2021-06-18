@@ -2,7 +2,10 @@ from abc import ABC, abstractmethod
 
 
 class ValidationError(Exception):
-    pass
+    """
+    Raised by a class implementing `IValidator` in case
+    the validation fails.
+    """
 
 
 class IValidator(ABC):
@@ -12,6 +15,10 @@ class IValidator(ABC):
 
 
 class DelimiterValidator(IValidator):
+    """
+    Validation of delimiters
+    """
+
     def __init__(self):
         self._delim_pairs = {
             "(": ")",
@@ -20,6 +27,21 @@ class DelimiterValidator(IValidator):
         }
 
     def __call__(self, value: str):
+        """
+        Check `value` for mismatched delimiters.
+
+        Internally we use a stack to verify that all delimiters have matching
+        counterparts. If we find an opening delimiter, we push it onto the
+        stack. When we encounter a closing delimiter, a matching opening
+        delimiter should be on top of the stack. If there is no matching
+        delimiter on top of the stack, validation fails.
+
+        After processing `value` is complete, an empty stack indicates that
+        `value` is valid. If the stack is not empty, `value` is invalid.
+
+        :param value: value being validated
+        :raises ValidationError: if validation fails
+        """
         stack = []
 
         for char in value:
