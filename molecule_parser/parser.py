@@ -68,6 +68,7 @@ class MoleculeParser(IMoleculeParser):
         rdelim = self.RDELIM_PATTERN.match(formula)
 
         if atom:
+            logger.debug(f"Found atom token {repr(atom.group())}")
             name = atom.group("name")
             index = int(atom.group("index") or 1)
 
@@ -78,11 +79,13 @@ class MoleculeParser(IMoleculeParser):
             tail = formula[atom.end() :]
 
         elif ldelim:
+            logger.debug(f"Found ldelim token {repr(ldelim.group())}")
             # enter new context
             self._stack.append(defaultdict(int))
             tail = formula[ldelim.end() :]
 
         elif rdelim:
+            logger.debug(f"Found rdelim token {repr(rdelim.group())}")
             index = int(rdelim.group("index") or 1)
 
             # merge outer and inner context
@@ -97,6 +100,7 @@ class MoleculeParser(IMoleculeParser):
             raise SyntaxError(f"bad character {repr(formula[0])}")
 
         if tail:
+            logger.debug(f"Calling with remainder {repr(tail)}")
             return self.parse(tail)
 
         return self._stack.pop()
