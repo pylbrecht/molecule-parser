@@ -97,6 +97,7 @@ class MoleculeParser(IMoleculeParser):
             tail = formula[rdelim.end() :]
 
         else:
+            logger.debug(f"Found bad character {repr(formula[0])}")
             raise SyntaxError(f"bad character {repr(formula[0])}")
 
         if tail:
