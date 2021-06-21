@@ -43,6 +43,7 @@ def parse_molecule(
     try:
         parser.validate(formula)
     except ValidationError as err:
+        logger.error(f"Validation failed for formula {repr(formula)}: {err}")
         raise SyntaxError(f"{err}") from err
     logger.info(f"Successfully validated formula {repr(formula)}")
 
