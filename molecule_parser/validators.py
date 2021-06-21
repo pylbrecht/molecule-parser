@@ -26,6 +26,9 @@ class DelimiterValidator(IValidator):
             "{": "}",
         }
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}"
+
     def __call__(self, value: str):
         """
         Check `value` for mismatched delimiters.

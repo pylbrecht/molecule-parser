@@ -46,6 +46,7 @@ class MoleculeParser(IMoleculeParser):
         :raises ValidationError: if `formula` is not valid
         """
         for validate in self.validators:
+            logger.debug(f"Validating {repr(formula)} with {validate}...")
             validate(formula)
 
     def parse(self, formula: str) -> Dict[str, int]:
