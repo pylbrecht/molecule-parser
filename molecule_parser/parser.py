@@ -58,6 +58,7 @@ class MoleculeParser(IMoleculeParser):
         :raises SyntaxError: for bad characters in `formula`
         """
         if not formula:
+            logger.debug("Nothing to parse, returning {}")
             return {}
 
         tail = None
