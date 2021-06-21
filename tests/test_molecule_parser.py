@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 
 from molecule_parser import __version__, parse_molecule
@@ -46,3 +48,14 @@ def test_parse_molecule(formula, result):
 def test_raise_exception_for_invalid_syntax(invalid_input, error_msg):
     with pytest.raises(SyntaxError, match=error_msg):
         parse_molecule(invalid_input)
+
+
+def test_info_logging_for_happy_path(caplog):
+    formula = "H2O"
+    with caplog.at_level(logging.INFO):
+        parse_molecule(formula)
+
+    assert f"Validating formula {repr(formula)}..." in caplog.text
+    assert f"Successfully validated formula {repr(formula)}" in caplog.text
+    assert f"Parsing formula {repr(formula)}..." in caplog.text
+    assert f"Successfully parsed formula {repr(formula)}" in caplog.text
