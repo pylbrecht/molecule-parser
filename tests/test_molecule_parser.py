@@ -70,3 +70,11 @@ def test_error_logging_for_failed_validation(caplog):
         f"Validation failed for formula {repr(invalid_formula)}: delimiter mismatch"
         in caplog.text
     )
+
+
+def test_debug_logging_for_empty_formula(caplog):
+    empty_formula = ""
+    with caplog.at_level(logging.DEBUG):
+        parse_molecule(empty_formula)
+
+    assert "Nothing to parse, returning {}" in caplog.text
