@@ -1,9 +1,13 @@
+import logging
 from typing import Callable, Dict
 
 from .parser import IMoleculeParser, MoleculeParser
 from .validators import ValidationError
 
 __version__ = "0.1.0"
+
+
+logger = logging.getLogger(__name__)
 
 
 def create_molecule_parser() -> MoleculeParser:
@@ -34,9 +38,16 @@ def parse_molecule(
     {'Mg': 1, 'O': 2, 'H': 2}
     """
     parser = create_molecule_parser()
+
+    logger.info(f"Validating formula {repr(formula)}...")
     try:
         parser.validate(formula)
     except ValidationError as err:
         raise SyntaxError(f"{err}") from err
+    logger.info(f"Successfully validated formula {repr(formula)}")
 
-    return parser.parse(formula)
+    logger.info(f"Parsing formula {repr(formula)}...")
+    molecule = parser.parse(formula)
+    logger.info(f"Successfully parsed formula {repr(formula)}")
+
+    return molecule

@@ -1,9 +1,12 @@
+import logging
 import re
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from typing import Dict
 
 from .validators import DelimiterValidator
+
+logger = logging.getLogger(__name__)
 
 
 class IMoleculeParser(ABC):
