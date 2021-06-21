@@ -48,7 +48,7 @@ class MoleculeParser(IMoleculeParser):
         for validate in self.validators:
             validate(formula)
 
-    def parse(self, formular: str) -> Dict[str, int]:
+    def parse(self, formula: str) -> Dict[str, int]:
         """
         Parse `formula` and return a `dict` mapping atoms to their count of
         occurrences.
@@ -57,14 +57,14 @@ class MoleculeParser(IMoleculeParser):
         :returns: a `dict` mapping atoms to their occurrence count
         :raises SyntaxError: for bad characters in `formula`
         """
-        if not formular:
+        if not formula:
             return {}
 
         tail = None
 
-        atom = self.ATOM_PATTERN.match(formular)
-        ldelim = self.LDELIM_PATTERN.match(formular)
-        rdelim = self.RDELIM_PATTERN.match(formular)
+        atom = self.ATOM_PATTERN.match(formula)
+        ldelim = self.LDELIM_PATTERN.match(formula)
+        rdelim = self.RDELIM_PATTERN.match(formula)
 
         if atom:
             name = atom.group("name")
@@ -74,12 +74,12 @@ class MoleculeParser(IMoleculeParser):
             molecule[name] = index
             self._stack.append(molecule)
 
-            tail = formular[atom.end() :]
+            tail = formula[atom.end() :]
 
         elif ldelim:
             # enter new context
             self._stack.append(defaultdict(int))
-            tail = formular[ldelim.end() :]
+            tail = formula[ldelim.end() :]
 
         elif rdelim:
             index = int(rdelim.group("index") or 1)
@@ -90,10 +90,10 @@ class MoleculeParser(IMoleculeParser):
                 molecule[name] += value * index
                 self._stack.append(molecule)
 
-            tail = formular[rdelim.end() :]
+            tail = formula[rdelim.end() :]
 
         else:
-            raise SyntaxError(f"bad character {repr(formular[0])}")
+            raise SyntaxError(f"bad character {repr(formula[0])}")
 
         if tail:
             return self.parse(tail)
