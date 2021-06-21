@@ -59,3 +59,14 @@ def test_info_logging_for_happy_path(caplog):
     assert f"Successfully validated formula {repr(formula)}" in caplog.text
     assert f"Parsing formula {repr(formula)}..." in caplog.text
     assert f"Successfully parsed formula {repr(formula)}" in caplog.text
+
+
+def test_error_logging_for_failed_validation(caplog):
+    invalid_formula = "(H2O"
+    with caplog.at_level(logging.ERROR), pytest.raises(SyntaxError):
+        parse_molecule(invalid_formula)
+
+    assert (
+        f"Validation failed for formula {repr(invalid_formula)}: delimiter mismatch"
+        in caplog.text
+    )
