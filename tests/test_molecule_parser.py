@@ -78,3 +78,17 @@ def test_debug_logging_for_empty_formula(caplog):
         parse_molecule(empty_formula)
 
     assert "Nothing to parse, returning {}" in caplog.text
+
+
+def test_debug_logging_for_happy_path(caplog):
+    with caplog.at_level(logging.DEBUG):
+        parse_molecule("Mg(OH)2")
+
+    assert "Found atom token 'Mg'" in caplog.text
+    assert "Calling with remainder '(OH)2'" in caplog.text
+    assert "Found ldelim token '('" in caplog.text
+    assert "Calling with remainder 'OH)2'" in caplog.text
+    assert "Found atom token 'O'" in caplog.text
+    assert "Found atom token 'H'" in caplog.text
+    assert "Calling with remainder ')2'" in caplog.text
+    assert "Found rdelim token ')2'" in caplog.text
