@@ -100,3 +100,13 @@ def test_debug_logging_for_bad_character(caplog):
         parse_molecule(bad_character)
 
     assert f"Found bad character {repr(bad_character)}" in caplog.text
+
+
+def test_debug_logging_for_failed_validation(caplog):
+    invalid_formula = "NO)3"
+    with caplog.at_level(logging.DEBUG), pytest.raises(SyntaxError):
+        parse_molecule(invalid_formula)
+
+    assert (
+        f"Validating {repr(invalid_formula)} with DelimiterValidator..." in caplog.text
+    )
